@@ -394,6 +394,14 @@ struct AllBalances:public Callback {
                 break;
 
             Addr *addr = *(s++);
+
+			if (0<addr->sum) {
+				++nonZeroCnt;
+			}
+			else {
+				continue;
+			}
+
             if(0!=nbRestricts) {
                 auto r = restrictMap.find(addr->hash.v);
                 if(restrictMap.end()==r) continue;
@@ -416,9 +424,7 @@ struct AllBalances:public Callback {
                 );
             }
 
-            if(0<addr->sum) {
-                ++nonZeroCnt;
-            }
+
 
             if(csv) {
                 printf(
@@ -429,7 +435,8 @@ struct AllBalances:public Callback {
                     addr->lastOut
                 );
             } else {
-                if(i<showAddr || 0!=nbRestricts) {
+                //if(i<showAddr || 0!=nbRestricts) {
+				if ( 0 == nbRestricts) {
                     uint8_t buf[64];
                     hash160ToAddr(buf, addr->hash.v, true, addr->type);
                     printf(" %s", buf);
